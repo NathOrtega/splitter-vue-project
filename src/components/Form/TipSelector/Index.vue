@@ -9,6 +9,7 @@
         @toggle="toggle"
         :isSelected="tipPercentage === selectedPercentage"
       />
+      <!-- Fix input -->
       <VInput
         placeholder="Custom"
         variant="small"

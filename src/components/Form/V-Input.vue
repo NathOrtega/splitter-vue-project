@@ -4,13 +4,17 @@
       <label v-if="customLabel" :for="id">
         {{ customLabel }}
       </label>
-      <span v-show="value < 0 || value === 0" class="warning">
-        Can't be {{ value === 0 ? 'zero' : 'negative' }}
+      <span v-show="modelValue < 0 || modelValue === 0" class="warning">
+        Can't be {{ modelValue === 0 ? 'zero' : 'negative' }}
       </span>
     </div>
     <div
       class="customInput"
-      :style="value < 0 || value === 0 ? 'border: 2px solid #e17457' : 'none'"
+      :style="
+        modelValue < 0 || modelValue === 0
+          ? 'border: 2px solid #e17457'
+          : 'none'
+      "
     >
       <label v-if="iconPath" :for="id">
         <img :src="iconPath" />
@@ -19,8 +23,8 @@
         :id="id"
         type="number"
         :placeholder="placeholder"
-        v-model="value"
-        @change="inputChange"
+        :value="modelValue"
+        @input="emit('update:modelValue', $event.target.value)"
       />
     </div>
   </div>
@@ -28,14 +32,17 @@
     v-else
     type="number"
     :placeholder="placeholder"
+    :value="modelValue"
+    @input="emit('update:modelValue', $event.target.value)"
     class="smallInput"
-    v-model="value"
-    :style="value < 0 || value === 0 ? 'border: 2px solid #e17457' : 'none'"
+    :style="
+      modelValue < 0 || modelValue === 0 ? 'border: 2px solid #e17457' : 'none'
+    "
   />
 </template>
 
 <script setup>
-import { defineProps, toRefs, ref, defineEmits, watchEffect } from 'vue'
+import { defineProps, toRefs, defineEmits } from 'vue'
 
 const props = defineProps({
   customLabel: String,
@@ -43,17 +50,13 @@ const props = defineProps({
   placeholder: String,
   variant: String,
   id: String,
+  modelValue: String,
 })
 
-const { customLabel, iconPath, placeholder, variant, id } = toRefs(props)
+const { customLabel, iconPath, placeholder, variant, id, modelValue } =
+  toRefs(props)
 
-const value = ref(null)
-
-const emit = defineEmits(['inputChange'])
-
-watchEffect(() => {
-  emit('inputChange', value)
-})
+const emit = defineEmits(['update:modelValue'])
 </script>
 
 <style scoped>

@@ -6,7 +6,7 @@
         id="billInput"
         :iconPath="require('@/assets/dollarSign.svg')"
         placeholder="0"
-        @inputChange="(value) => (bill = value.value)"
+        v-model="bill"
       />
       <TipSelector @tipChange="(value) => (tipPercentage = value.value)" />
       <VInput
@@ -14,7 +14,7 @@
         id="numberOfPeopleInput"
         :iconPath="require('@/assets/userIcon.svg')"
         placeholder="0"
-        @inputChange="(value) => (numberOfPeople = value.value)"
+        v-model="numberOfPeople"
       />
     </div>
     <ResultCard :totalPerPerson="totalPerPerson" :tipPerPerson="tipPerPerson" />
@@ -27,9 +27,9 @@ import ResultCard from './ResultCard/Index.vue'
 import TipSelector from './TipSelector/Index.vue'
 import { ref, watchEffect } from 'vue'
 
-const bill = ref(0)
+const bill = ref(null)
 const tipPercentage = ref(0)
-const numberOfPeople = ref(0)
+const numberOfPeople = ref(null)
 const totalPerPerson = ref(0)
 const tipPerPerson = ref(0)
 
