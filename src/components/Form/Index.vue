@@ -8,7 +8,7 @@
         placeholder="0"
         v-model="bill"
       />
-      <TipSelector @tipChange="(value) => (tipPercentage = value.value)" />
+      <TipSelector v-model="tipPercentage" />
       <VInput
         customLabel="Number of People"
         id="numberOfPeopleInput"
@@ -17,7 +17,11 @@
         v-model="numberOfPeople"
       />
     </div>
-    <ResultCard :totalPerPerson="totalPerPerson" :tipPerPerson="tipPerPerson" />
+    <ResultCard
+      :totalPerPerson="totalPerPerson"
+      :tipPerPerson="tipPerPerson"
+      @reset="reset"
+    />
   </form>
 </template>
 
@@ -28,7 +32,7 @@ import TipSelector from './TipSelector/Index.vue'
 import { ref, watchEffect } from 'vue'
 
 const bill = ref(null)
-const tipPercentage = ref(0)
+const tipPercentage = ref(null)
 const numberOfPeople = ref(null)
 const totalPerPerson = ref(0)
 const tipPerPerson = ref(0)
@@ -44,12 +48,20 @@ watchEffect(() => {
 
 watchEffect(() => {
   const result = (bill.value * tipPercentage.value) / 100 / numberOfPeople.value
-  if (result === Infinity || result === -Infinity || !result) {
+  if (result === Infinity || result === -Infinity || !result || result < 0) {
     tipPerPerson.value = 0
   } else {
     tipPerPerson.value = result
   }
 })
+
+const reset = () => {
+  bill.value = null
+  tipPercentage.value = null
+  numberOfPeople.value = null
+  totalPerPerson.value = 0
+  tipPerPerson.value = 0
+}
 </script>
 
 <style scoped>

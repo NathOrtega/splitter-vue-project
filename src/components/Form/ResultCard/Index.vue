@@ -13,9 +13,10 @@
       />
     </div>
     <button
+      type="reset"
       :class="{ disabled: !totalPerPerson && !tipPerPerson }"
       :disabled="!totalPerPerson && !tipPerPerson"
-      @click="location.reload()"
+      @click="emit('reset')"
     >
       RESET
     </button>
@@ -24,7 +25,7 @@
 
 <script setup>
 import LineItem from './LineItem.vue'
-import { toRefs, defineProps } from 'vue'
+import { toRefs, defineProps, defineEmits } from 'vue'
 
 const props = defineProps({
   totalPerPerson: Number,
@@ -32,6 +33,8 @@ const props = defineProps({
 })
 
 const { totalPerPerson, tipPerPerson } = toRefs(props)
+
+const emit = defineEmits(['reset'])
 </script>
 
 <style scoped>

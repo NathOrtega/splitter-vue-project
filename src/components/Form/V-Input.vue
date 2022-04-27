@@ -1,19 +1,17 @@
 <template>
-  <div v-if="!variant" class="inputContainer">
+  <div class="inputContainer">
     <div class="inputHeader">
       <label v-if="customLabel" :for="id">
         {{ customLabel }}
       </label>
-      <span v-show="modelValue < 0 || modelValue === 0" class="warning">
-        Can't be {{ modelValue === 0 ? 'zero' : 'negative' }}
+      <span v-show="modelValue < 0 || modelValue == 0" class="warning">
+        Can't be {{ modelValue == 0 ? 'zero' : 'negative' }}
       </span>
     </div>
     <div
       class="customInput"
       :style="
-        modelValue < 0 || modelValue === 0
-          ? 'border: 2px solid #e17457'
-          : 'none'
+        modelValue < 0 || modelValue == 0 ? 'border: 2px solid #e17457' : 'none'
       "
     >
       <label v-if="iconPath" :for="id">
@@ -28,17 +26,6 @@
       />
     </div>
   </div>
-  <input
-    v-else
-    type="number"
-    :placeholder="placeholder"
-    :value="modelValue"
-    @input="emit('update:modelValue', $event.target.value)"
-    class="smallInput"
-    :style="
-      modelValue < 0 || modelValue === 0 ? 'border: 2px solid #e17457' : 'none'
-    "
-  />
 </template>
 
 <script setup>
@@ -48,13 +35,11 @@ const props = defineProps({
   customLabel: String,
   iconPath: String,
   placeholder: String,
-  variant: String,
   id: String,
   modelValue: String,
 })
 
-const { customLabel, iconPath, placeholder, variant, id, modelValue } =
-  toRefs(props)
+const { customLabel, iconPath, placeholder, id, modelValue } = toRefs(props)
 
 const emit = defineEmits(['update:modelValue'])
 </script>
@@ -83,8 +68,7 @@ label {
   margin-top: 6px;
 }
 
-.customInput:focus-within,
-.smallInput:focus-within {
+.customInput:focus-within {
   border: 2px solid #26c2ae;
 }
 
@@ -110,19 +94,6 @@ input {
 
 input::placeholder {
   color: #9ebbbd;
-}
-
-.smallInput {
-  width: 148px;
-  height: 48px;
-  background-color: #f3f9fa;
-  border-radius: 5px;
-  padding: 0 16px;
-  margin-bottom: 16px;
-}
-
-.smallInput::placeholder {
-  color: #547878;
 }
 
 .inputHeader {

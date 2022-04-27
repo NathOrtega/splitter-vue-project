@@ -7,41 +7,50 @@
         :tipPercentage="tipPercentage"
         :key="index"
         @toggle="toggle"
-        :isSelected="tipPercentage === selectedPercentage"
+        :isSelected="tipPercentage === modelValue"
       />
       <!-- Fix input -->
-      <VInput
+      <input
+        type="number"
         placeholder="Custom"
-        variant="small"
-        @inputChange="(value) => (selectedPercentage = value.value)"
+        :value="modelValue === null ? null : input"
+        @input="handleInputChange($event.target.value)"
+        :style="modelValue < 0 ? 'border: 2px solid #e17457' : 'none'"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits, watchEffect } from 'vue'
+import { defineProps, toRefs, ref, defineEmits } from 'vue'
 
 import VToggle from './V-Toggle.vue'
-import VInput from '../V-Input.vue'
+
+const props = defineProps({
+  modelValue: String,
+})
+
+const { modelValue } = toRefs(props)
 
 const tipPercentages = ['5', '10', '15', '25', '50']
 
-const selectedPercentage = ref(0)
+const input = ref(null)
 
-const emit = defineEmits(['tipChange'])
+const emit = defineEmits(['update:modelValue'])
 
-const toggle = (tipPercentage) => {
-  if (tipPercentage.value === selectedPercentage.value) {
-    selectedPercentage.value = '0'
-  } else {
-    selectedPercentage.value = tipPercentage.value
-  }
+const handleInputChange = (newValue) => {
+  input.value = newValue
+  emit('update:modelValue', newValue)
 }
 
-watchEffect(() => {
-  emit('tipChange', selectedPercentage)
-})
+const toggle = (tipPercentage) => {
+  if (tipPercentage.value === modelValue.value) {
+    emit('update:modelValue', null)
+  } else {
+    emit('update:modelValue', tipPercentage.value)
+    input.value = null
+  }
+}
 </script>
 
 <style scoped>
@@ -58,6 +67,30 @@ watchEffect(() => {
   flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
+}
+
+input {
+  width: 148px;
+  height: 48px;
+  background-color: #f3f9fa;
+  border-radius: 5px;
+  padding: 0 16px;
+  margin-bottom: 16px;
+  text-align: right;
+  outline: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: #00474b;
+  cursor: pointer;
+  border: none;
+}
+
+input::placeholder {
+  color: #547878;
+}
+
+input:focus-within {
+  border: 2px solid #26c2ae;
 }
 
 @media screen and (min-width: 768px) {
